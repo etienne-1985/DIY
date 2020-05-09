@@ -1,2 +1,1 @@
-# diy_robots
-some of my project in robotics
+# D.I.Y
