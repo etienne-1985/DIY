@@ -24,8 +24,9 @@ import datetime
 import time 
 from time import sleep
 import logging
-datefmt='%I:%M:%S %p' #'%m/%d/%Y %I:%M:%S %p'
-logging.basicConfig(filename='power_stats.log', format='%(asctime)s %(message)s', level=logging.INFO, datefmt=datefmt)
+datefmt='%m/%d/%Y %I:%M:%S %p'
+# logging.basicConfig(filename='power_stats.log', format='%(asctime)s %(message)s', level=logging.INFO, datefmt=datefmt)
+logging.basicConfig(filename='power_stats.log', format='%(message)s', level=logging.INFO)
 TIME_INTER=5  # time interval in seconds
 
 def logPowerStats():
@@ -36,22 +37,24 @@ def logPowerStats():
     voltage=open("/sys/class/power_supply/max77696-battery/voltage_now","r").readline().strip()
     voltage_avg=open("/sys/class/power_supply/max77696-battery/voltage_avg","r").readline().strip()
     timestamp = datetime.datetime.now().timestamp().__round__().__str__()
-    logging.info('%s %smA (%smA), volt: %sv (%sv), charge: %s (%s)', timestamp, current_avg, current, voltage_avg, voltage, charge, capacity)
+    logging.info('%s, %s, %s, %s, %s, %s, %s', timestamp, current_avg, current, voltage_avg, voltage, charge, capacity)
+    print('%smA (%smA), %sv (%sv), %s (%s)' %(current_avg, current, voltage_avg, voltage, charge, capacity))
     # log = timestamp+": "+current_avg+"("+" "+voltage_avg+" "+charge+" "+capacity+"\n"
     # print(log)
     # return log
     
 # start logging
 fullstats=open("/sys/class/power_supply/max77696-battery/uevent","r").read()
-logging.info('START DATA LOG >>>>>>')
+logging.info('<<<<<< START DATA LOG >>>>>>')
 logging.info(fullstats)
-#periodically log
+logging.info('timestamp, current_avg, current, voltage_avg, voltage, charge, capacity')
+# periodically log
 while True:
     try:
-        logging.info(logPowerStats())
+        logPowerStats()
         sleep(TIME_INTER)
     except:
-        logging.warning('<<<<<< END DATA LOG')
+        logging.warning('<<<<<< END DATA LOG >>>>>>')
         break
 
 
