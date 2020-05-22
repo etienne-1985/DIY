@@ -1,0 +1,19 @@
+# /etc/systemd/system/tunnel.service
+[Unit]
+Description= reverse SSH tunnel to serveur
+#Wants=network-online.target
+#After=network-online.target
+StartLimitIntervalSec=10
+
+[Service]
+#Environment="AUTOSSH_GATETIME=0"
+ExecStart=/usr/bin/autossh -M 0 -NR 2222:localhost:22 \
+-o "ServerAliveInterval 15" -o "ServerAliveCountMax 3" -o "ConnectTimeout 10" -o "ExitOnForwardFailure yes" \
+-p <port> <username>@<server>
+Type=simple
+Restart=always
+RestartSec=10
+#ExecStart=/usr/bin/ssh -NR 2222:localhost:22 -o TCPKeepAlive=yes -p <port> <username>@<server>
+
+[Install]
+WantedBy=multi-user.target
